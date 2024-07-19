@@ -1,12 +1,14 @@
 post_install() {
-  depmod -a
-  modprobe xpmem
+  dkms add xpmem/${1%-*}
+  dkms install xpmem/${1%-*}
 }
 
 post_upgrade() {
-  post_install
+  dkms remove xpmem/${2%-*} --all
+  dkms add xpmem/${1%-*}
+  dkms install xpmem/${1%-*}
 }
 
-post_remove() {
-  depmod -a
+pre_remove() {
+  dkms remove xpmem/${1%-*} --all
 }
