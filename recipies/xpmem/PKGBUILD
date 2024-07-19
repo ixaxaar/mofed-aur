@@ -35,10 +35,10 @@ package() {
   rm -rf "$pkgdir/usr/etc"
 
   # Set name and version in dkms.conf
-  sed -e "s/@PACKAGE_NAME@/$_pkgbase/" \
+  sed -e "s/@PACKAGE_NAME@/$_pkgname/" \
       -e "s/@PACKAGE_VERSION@/$pkgver/" \
       -i "dkms.conf"
 
   # Install dkms.conf
-  install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgbase-$pkgver/dkms.conf"
+  install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgname-$pkgver/dkms.conf"
 }
