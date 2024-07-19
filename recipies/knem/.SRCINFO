@@ -1,0 +1,15 @@
+pkgbase = mlnx-knem
+	pkgdesc = High-Performance Intra-Node MPI Communication Module (DKMS), part of Mellanox OFED
+	pkgver = 1.1.4.90mlnx3
+	pkgrel = 1
+	url = http://knem.gitlabpages.inria.fr
+	install = knem.install
+	arch = x86_64
+	license = GPL2
+	makedepends = linux-headers
+	depends = dkms
+	conflicts = knem
+	source = knem-1.1.4.90mlnx3.tar.gz::https://linux.mellanox.com/public/repo/mlnx_ofed/latest/SRPMS/knem-1.1.4.90mlnx3.tar.gz
+	sha256sums = SKIP
+
+pkgname = mlnx-knem

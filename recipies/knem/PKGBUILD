@@ -16,9 +16,9 @@ sha256sums=('SKIP')
 
 prepare() {
     cd "$_pkgbase-$pkgver"
-    ./configure --prefix=/usr \
+    ./configure --prefix=/opt/mlnx-knem \
                 --sysconfdir=/etc \
-                --libdir=/usr/lib \
+                --libdir=/opt/mlnx-knem/lib \
                 --with-kernel-modules=/usr/lib/modules/$(uname -r)
 }
 
@@ -29,17 +29,17 @@ build() {
 
 package() {
     cd "$_pkgbase-$pkgver"
+
+    install -dm755 "$pkgdir/usr"
     make DESTDIR="$pkgdir/" install
 
     install -dm755 "$pkgdir/usr/lib/modules/$(uname -r)"
-    install -dm755 "$pkgdir/usr/"
+    mv "$pkgdir"/opt/mlnx-knem/lib/modules/$(uname -r)/knem.ko "$pkgdir/usr/lib/modules/$(uname -r)/knem.ko"
 
     # Install udev rules
     install -Dm644 "$pkgdir/etc/10-knem.rules" "$pkgdir/usr/lib/udev/rules.d/10-knem.rules"
 
     # Prepare DKMS
-    install -dm755 "$pkgdir/usr/src/$_pkgbase-$pkgver"
-    cp -r driver/* "$pkgdir/usr/src/$_pkgbase-$pkgver/"
     sed -e "s/@PACKAGE_NAME@/$_pkgbase/" \
         -e "s/@PACKAGE_VERSION@/$pkgver/" \
         -i "dkms.conf"

@@ -1,0 +1,16 @@
+post_install() {
+    dkms add knem/${1%-*}
+    dkms install knem/${1%-*}
+    echo "To use knem, load the module with: modprobe knem"
+    echo "Users who need to use knem should be added to the 'rdma' group."
+}
+
+post_upgrade() {
+    dkms remove knem/${2%-*} --all 2>/dev/null || true
+    dkms add knem/${1%-*}
+    dkms install knem/${1%-*}
+}
+
+pre_remove() {
+    dkms remove knem/${1%-*} --all
+}
