@@ -14,7 +14,7 @@ Part of an effort to bring first-class HPC support for Arch.
 'top to bottom direction
 left to right direction
 
-skinparam linetype polyline
+skinparam linetype ortho
 
 skinparam componentStyle rectangle
 skinparam backgroundColor #1a1a1a
@@ -92,11 +92,11 @@ package "<<Network>>\nNETWORK MANAGEMENT" as network {
 }
 
 ' Relationships with neon colors
-hpc -[#ff00ff]-> openmpi
-hpc -[#ff00ff]-> ucx
-ml -[#ff00ff]-> ucx
-storage -[#ff00ff]-> storage_drivers
-containers -[#ff00ff]-> ovs
+hpc -[#ff00ff]left-> openmpi
+hpc -[#ff00ff]left-> ucx
+ml -[#ff00ff]left-> ucx
+storage -[#ff00ff]left-> storage_drivers
+containers -[#ff00ff]left-> ovs
 
 openmpi -[#00ffff]-> rdma_core
 ucx -[#00ffff]-> rdma_core
@@ -118,8 +118,8 @@ xpmem_lib -[#00ff88]-> xpmem
 perf_test -[#00ff88]-> rdma_core
 ibsim -[#00ff88]-> rdma_core
 
-ovs -[#ff00ff]-> ofa
-nettools -[#ff00ff]-> ofa
+ovs -[#ff00ff]up-> ofa
+nettools -[#ff00ff]up-> ofa
 
 @enduml
 ```
