@@ -1,6 +1,6 @@
 # MOFED AUR
 
-Mellanox Open Fabric Distribution (OFED) packages for Arch Linux.
+Mellanox Open Fabric Enterprise Distribution (OFED) packages for Arch Linux.
 Part of an effort to bring first-class HPC support for Arch.
 
 ## Package List
