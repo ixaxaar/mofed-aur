@@ -1,0 +1,51 @@
+# Maintainer: Russi Chatterjee <ixaxaar@mailbox.org>
+pkgname=mlnx-knem
+_pkgbase=knem
+pkgver=1.1.4.90mlnx3
+pkgrel=1
+pkgdesc="High-Performance Intra-Node MPI Communication Module (DKMS), part of Mellanox OFED"
+arch=('x86_64')
+url="http://knem.gitlabpages.inria.fr"
+license=('GPL2')
+depends=('dkms')
+makedepends=('linux-headers')
+conflicts=('knem')
+install=${_pkgbase}.install
+source=("$_pkgbase-$pkgver.tar.gz::https://linux.mellanox.com/public/repo/mlnx_ofed/latest/SRPMS/$_pkgbase-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "$_pkgbase-$pkgver"
+    ./configure --prefix=/usr \
+                --sysconfdir=/etc \
+                --libdir=/usr/lib \
+                --with-kernel-modules=/usr/lib/modules/$(uname -r)
+}
+
+build() {
+    cd "$_pkgbase-$pkgver"
+    make
+}
+
+package() {
+    cd "$_pkgbase-$pkgver"
+    make DESTDIR="$pkgdir/" install
+
+    install -dm755 "$pkgdir/usr/lib/modules/$(uname -r)"
+    install -dm755 "$pkgdir/usr/"
+
+    # Install udev rules
+    install -Dm644 "$pkgdir/etc/10-knem.rules" "$pkgdir/usr/lib/udev/rules.d/10-knem.rules"
+
+    # Prepare DKMS
+    install -dm755 "$pkgdir/usr/src/$_pkgbase-$pkgver"
+    cp -r driver/* "$pkgdir/usr/src/$_pkgbase-$pkgver/"
+    sed -e "s/@PACKAGE_NAME@/$_pkgbase/" \
+        -e "s/@PACKAGE_VERSION@/$pkgver/" \
+        -i "dkms.conf"
+
+    install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgbase-$pkgver/dkms.conf"
+    # Install modprobe configuration
+    echo "options knem max_dma_requests=8192" | \
+        install -Dm644 /dev/stdin "$pkgdir/etc/modprobe.d/knem.conf"
+}
