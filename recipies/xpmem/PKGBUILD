@@ -1,0 +1,34 @@
+# Maintainer: Russi Chatterjee <ixaxaar@mailbox.org>
+pkgname=xpmem
+pkgver=2.7.3
+pkgrel=1
+pkgdesc="XPMEM (Cross-Partition Memory) is a Linux kernel module that allows programs to share memory"
+arch=('x86_64')
+url="https://github.com/hpc/xpmem"
+license=('GPL2')
+depends=('linux-headers')
+makedepends=('git')
+install=xpmem.install
+source=("$pkgname-$pkgver.tar.gz::https://linux.mellanox.com/public/repo/mlnx_ofed/latest/SRPMS/$pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+
+  # Install udev rules
+  install -Dm644 "$pkgdir/lib/udev/rules.d/56-xpmem.rules" \
+                 "$pkgdir/usr/lib/udev/rules.d/56-xpmem.rules"
+  rm -rf "$pkgdir/lib"
+
+  # Install init script
+  install -Dm755 "$pkgdir/usr/etc/init.d/xpmem" \
+                 "$pkgdir/etc/init.d/xpmem"
+  rm -rf "$pkgdir/usr/etc"
+}
