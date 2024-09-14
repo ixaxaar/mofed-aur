@@ -16,6 +16,7 @@ build() {
   cd "$pkgname-$pkgver"
   ./configure --prefix=/usr
   make
+  libtool --finish /usr/lib
 }
 
 package() {
@@ -31,4 +32,12 @@ package() {
   install -Dm755 "$pkgdir/usr/etc/init.d/xpmem" \
                  "$pkgdir/etc/init.d/xpmem"
   rm -rf "$pkgdir/usr/etc"
+
+  # Set name and version in dkms.conf
+  sed -e "s/@PACKAGE_NAME@/$_pkgbase/" \
+      -e "s/@PACKAGE_VERSION@/$pkgver/" \
+      -i "dkms.conf"
+
+  # Install dkms.conf
+  install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgbase-$pkgver/dkms.conf"
 }
