@@ -1,0 +1,12 @@
+post_install() {
+  depmod -a
+  modprobe xpmem
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  depmod -a
+}
