@@ -1,0 +1,34 @@
+# Maintainer: Russi Chatterjee <ixaxaar@mailbox.org>
+pkgname=mlnx-xpmem-lib
+_pkgname=xpmem-lib
+_pkgbase=xpmem
+pkgver=2.7
+pkgrel=1
+pkgdesc="XPMEM (Cross-Partition Memory) userspace library"
+arch=('x86_64')
+url="https://github.com/hpc/xpmem"
+license=('GPL2')
+depends=('mlnx-xpmem')
+makedepends=('git')
+source=("$_pkgname-$pkgver.tar.gz::https://linux.mellanox.com/public/repo/mlnx_ofed/latest/SRPMS/$_pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "$_pkgname-$pkgver"
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --libdir=/usr/lib
+  make
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+
+  # Remove files that are already provided by the xpmem package
+  rm -rf "$pkgdir/etc/init.d/xpmem"
+  rm -rf "$pkgdir/usr/include/xpmem.h"
+  rm -rf "$pkgdir/usr/lib/modules"
+  rm -rf "$pkgdir/usr/lib/pkgconfig/xpm.pc"
+  rm -f "$pkgdir/usr/lib/libxpmem.so"
+}
