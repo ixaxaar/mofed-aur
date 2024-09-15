@@ -1,0 +1,14 @@
+pkgbase = mlnx-xpmem
+	pkgdesc = XPMEM (Cross-Partition Memory) is a Linux kernel module that allows programs to share memory, for Mellanox OFED
+	pkgver = 2.7.3
+	pkgrel = 1
+	url = https://github.com/hpc/xpmem
+	install = xpmem.install
+	arch = x86_64
+	license = GPL2
+	makedepends = git
+	depends = linux-headers
+	source = xpmem-2.7.3.tar.gz::https://linux.mellanox.com/public/repo/mlnx_ofed/latest/SRPMS/xpmem-2.7.3.tar.gz
+	sha256sums = SKIP
+
+pkgname = mlnx-xpmem
