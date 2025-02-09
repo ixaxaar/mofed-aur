@@ -4,6 +4,9 @@ all:
 install:
 	makepkg -si
 
+srcinfo:
+	makepkg --printsrcinfo > .SRCINFO
+
 uninstall:
 	sudo pacman -Rd mlnx-xpmem
 
