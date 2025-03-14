@@ -17,9 +17,9 @@ sha256sums=('SKIP')
 prepare() {
     cd "$_pkgbase-$pkgver"
     ./configure --prefix=/opt/mlnx-knem \
-                --sysconfdir=/etc \
-                --libdir=/opt/mlnx-knem/lib \
-                --with-kernel-modules=/usr/lib/modules/$(uname -r)
+        --sysconfdir=/etc \
+        --libdir=/opt/mlnx-knem/lib \
+        --with-kernel-modules=/usr/lib/modules/$(uname -r)
 }
 
 build() {
@@ -45,7 +45,8 @@ package() {
         -i "dkms.conf"
 
     install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgbase-$pkgver/dkms.conf"
+
     # Install modprobe configuration
-    echo "options knem max_dma_requests=8192" | \
+    echo "options knem max_dma_requests=8192" |
         install -Dm644 /dev/stdin "$pkgdir/etc/modprobe.d/knem.conf"
 }

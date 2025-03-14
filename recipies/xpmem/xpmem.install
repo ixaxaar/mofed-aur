@@ -1,14 +1,14 @@
 post_install() {
-  dkms add xpmem/${1%-*}
-  dkms install xpmem/${1%-*}
+    dkms add xpmem/${1%-*}
+    dkms install xpmem/${1%-*} --force
 }
 
 post_upgrade() {
-  dkms remove xpmem/${2%-*} --all
-  dkms add xpmem/${1%-*}
-  dkms install xpmem/${1%-*}
+    dkms remove xpmem/${2%-*} --all
+    dkms add xpmem/${1%-*}
+    dkms install xpmem/${1%-*} --force
 }
 
 pre_remove() {
-  dkms remove xpmem/${1%-*} --all
+    dkms remove xpmem/${1%-*} --all
 }

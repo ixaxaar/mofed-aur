@@ -14,32 +14,30 @@ source=("$_pkgname-$pkgver.tar.gz::https://linux.mellanox.com/public/repo/mlnx_o
 sha256sums=('SKIP')
 
 build() {
-  cd "$_pkgname-$pkgver"
-  ./configure --prefix=/usr
-  make
-  libtool --finish /usr/lib
+    cd "$_pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+    libtool --finish /usr/lib
 }
 
 package() {
-  cd "$_pkgname-$pkgver"
-  make DESTDIR="$pkgdir/" install
+    cd "$_pkgname-$pkgver"
+    make DESTDIR="$pkgdir/" install
 
-  # Install udev rules
-  install -Dm644 "$pkgdir/lib/udev/rules.d/56-xpmem.rules" \
-    "$pkgdir/usr/lib/udev/rules.d/56-xpmem.rules"
-  rm -rf "$pkgdir/lib"
+    # Install udev rules
+    install -Dm644 "$pkgdir/lib/udev/rules.d/56-xpmem.rules" \
+        "$pkgdir/usr/lib/udev/rules.d/56-xpmem.rules"
+    rm -rf "$pkgdir/lib"
 
-  # Copy dkms.conf
-  install -Dm644 dkms.conf "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/dkms.conf
+    # Prepare DKMS
+    sed -e "s/@PACKAGE_NAME@/$_pkgname/" \
+        -e "s/@PACKAGE_VERSION@/$pkgver/" \
+        -i "dkms.conf"
+    install -Dm644 dkms.conf "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/dkms.conf
 
-  # Set name and version in dkms.conf
-  sed -e "s/@_pkgname@/${_pkgname}/" \
-    -e "s/@PKGVER@/${pkgver}/" \
-    -i "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/dkms.conf
+    # Copy sources (including Makefile)
+    cp -r ${srcdir}/${_pkgname}-${pkgver}/* "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/
 
-  # Copy sources (including Makefile)
-  cp -r ${srcdir}/${_pkgname}-${pkgver}/* "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/
-
-  # Install dkms.conf
-  install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgname-$pkgver/dkms.conf"
+    # Install dkms.conf
+    install -Dm644 "dkms.conf" "$pkgdir/usr/src/$_pkgname-$pkgver/dkms.conf"
 }
